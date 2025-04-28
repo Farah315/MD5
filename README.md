@@ -45,8 +45,7 @@ val paddedInput = inputBytes +
         ByteArray(paddingLength) +
         convertLengthToBytes(bitLength)
 ```
-- `0x80`: بايت البداية (10000000 في二进制)
-- بايتات الصفر: حشو حتى الطول المطلوب
+- `0x80`: بايت البداية
 - `convertLengthToBytes`: طول الرسالة الأصلي (64 بت) مضافًا في النهاية
 
 ### 4. المتغيرات الأولية (Initial Hash Values)
