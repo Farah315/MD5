@@ -3,8 +3,7 @@ import java.io.File
 import org.example.logic.MD5
 
 class CredentialManager {
-    private val folder = File("security")
-    //private val folder = File("org.example.data")
+    private val folder = File("src/main/kotlin/data/security")
     private val usernamesFile = File(folder, "usernames.csv")
     private val passwordsFile = File(folder, "passwords.csv")
     private val md5 = MD5()
@@ -31,7 +30,3 @@ class CredentialManager {
         passwordsFile.appendText("$hashedPassword\n")
     }
 }
-
-
-
-

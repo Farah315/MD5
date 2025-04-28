@@ -8,7 +8,7 @@ class MD5 {
         6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
     )
 
-    private val k = IntArray(64) { i ->
+    private val k= IntArray(64) { i ->
         (kotlin.math.abs(kotlin.math.sin((i + 1).toDouble())) * (1L shl 32)).toLong().toInt()
     }
 
@@ -94,3 +94,13 @@ class MD5 {
             ((value shr 56) and 0xff).toByte()
         )
 }
+
+
+/*
+@OptIn(ExperimentalStdlibApi::class)
+fun File.md5(): String {
+    val md = MessageDigest.getInstance("MD5")
+    val digest = md.digest(this.readBytes())
+    return digest.toHexString()
+}
+*/
