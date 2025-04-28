@@ -1,32 +1,37 @@
 package org.example.data
-import java.io.File
+import okio.FileSystem
+import okio.Path.Companion.toPath
+import okio.buffer
 import org.example.logic.MD5
 
 class CredentialManager {
-    private val folder = File("src/main/kotlin/data/security")
-    private val usernamesFile = File(folder, "usernames.csv")
-    private val passwordsFile = File(folder, "passwords.csv")
+    private val folderPath = "src/main/kotlin/data/security".toPath()
+    private val usernamesPath = folderPath.resolve("usernames.csv")
+    private val passwordsPath = folderPath.resolve("passwords.csv")
+    private val fileSystem = FileSystem.SYSTEM
     private val md5 = MD5()
 
     init {
-        if (!folder.exists()) {
-            folder.mkdirs()
+        if (!fileSystem.exists(folderPath)) {
+            fileSystem.createDirectories(folderPath)
         }
-        if (!usernamesFile.exists()) {
-            usernamesFile.createNewFile()
-            usernamesFile.appendText("HashedUsernames\n")
+        if (!fileSystem.exists(usernamesPath)) {
+            fileSystem.write(usernamesPath) {
+                writeUtf8("HashedUsernames\n")
+            }
         }
-        if (!passwordsFile.exists()) {
-            passwordsFile.createNewFile()
-            passwordsFile.appendText("HashedPasswords\n")
+        if (!fileSystem.exists(passwordsPath)) {
+            fileSystem.write(passwordsPath) {
+                writeUtf8("HashedPasswords\n")
+            }
         }
     }
 
     fun saveCredentials(username: String, password: String) {
-        val hashedUsername = md5.hash(username)
-        val hashedPassword = md5.hash(password)
+        val hashedUsername = md5.generateHash(username)
+        val hashedPassword = md5.generateHash(password)
 
-        usernamesFile.appendText("$hashedUsername\n")
-        passwordsFile.appendText("$hashedPassword\n")
+        fileSystem.appendingSink(usernamesPath).buffer().use { it.writeUtf8("$hashedUsername\n") }
+        fileSystem.appendingSink(passwordsPath).buffer().use { it.writeUtf8("$hashedPassword\n") }
     }
 }
